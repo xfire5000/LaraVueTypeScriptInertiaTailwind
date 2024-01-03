@@ -1,0 +1,64 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+    "jquery": true,
+    "commonjs": true,
+    "vue/setup-compiler-macros": true
+  },
+  "extends": [
+    "plugin:vue/strongly-recommended",
+    "eslint:recommended",
+    "@vue/typescript/recommended",
+    "prettier"
+  ],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
+    "Vue": true,
+    "EventBus": true,
+    "axios": true,
+    "_": true,
+    "tinymce": true,
+    "ziggy": true,
+    "Ziggy": true,
+    "globalThis": true,
+    "route": true,
+    "preview": true,
+    "Echo": true,
+    "JQuery": true,
+    "$": true
+  },
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser"
+  },
+  "plugins": ["@typescript-eslint", "prettier", "eslint-plugin-vue", "jquery"],
+  "root": true,
+  "rules": {
+    "prettier/prettier": "error",
+    "no-var": "off",
+    // not needed for vue 3
+    "vue/no-multiple-template-root": "off",
+    "vue/no-unused-vars": "off",
+    "vue/multi-word-component-names": "off",
+    "vue/require-valid-default-prop": "off",
+    "vue/no-dupe-keys": "off",
+    "no-console": "off",
+    "no-unused-vars": "off",
+    "no-func-assign": "off",
+    "no-prototype-builtins": "off",
+    "no-dupe-keys": "off",
+    "indent": "off",
+    "quotes": ["error", "single"],
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "prefer-const": "off",
+    "vue/no-mutating-props": "off",
+    "vue/require-default-prop": "off",
+    "vue/valid-v-bind": "off",
+    "vue/one-component-per-file": "off"
+  }
+}

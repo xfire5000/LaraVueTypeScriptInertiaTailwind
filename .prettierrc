@@ -1,0 +1,31 @@
+{
+  "bracketSpacing": true,
+  "charset": "utf-8",
+  "editorconfig": true,
+  "importOrderCaseInsensitive": true,
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "indentInnerHtml": true,
+  "intent_size": 2,
+  "intent_style": "tab",
+  "noPhpSyntaxCheck": false,
+  "plugins": [
+    "@prettier/plugin-pug",
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-sort-json"
+  ],
+  "pugClassLocation": "after-attributes",
+  "pugSingleQuote": false,
+  "pugSortAttributes": "asc",
+  "pugTabWidth": 2,
+  "pugWrapAttributesThreshold": -1,
+  "semi": false,
+  "singleQuote": true,
+  "sortHtmlAttributes": "none",
+  "sortTailwindcssClasses": true,
+  "tabWidth": 2,
+  "vueIndentScriptAndStyle": true,
+  "wrapAttributes": "auto",
+  "wrapAttributesMinAttrs": 2
+}

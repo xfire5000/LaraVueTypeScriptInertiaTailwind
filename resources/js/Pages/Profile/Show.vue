@@ -1,0 +1,79 @@
+<script setup lang="ts">
+  import DeleteUserForm from './Partials/DeleteUserForm.vue'
+  import LogoutOtherBrowserSessionsForm from './Partials/LogoutOtherBrowserSessionsForm.vue'
+  import TwoFactorAuthenticationForm from './Partials/TwoFactorAuthenticationForm.vue'
+  import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue'
+  import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue'
+  import { usePage } from '@inertiajs/vue3'
+
+  defineProps<{
+    sessions: any[]
+    confirmsTwoFactorAuthentication: boolean
+  }>()
+
+  const { setBreadCrumbItem, breadCrumb } = useGlobalState()
+
+  const { t } = useI18n()
+
+  onMounted(() => {
+    breadCrumb.value = []
+    setBreadCrumbItem({
+      title: t('profile'),
+    })
+  })
+
+  const $page = usePage<InertiaPageProps>()
+</script>
+
+<template>
+  <p-head :title="$t('profile')"></p-head>
+  <PanelLayout>
+    <template #header>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        {{ $t('profile') }}
+      </h2>
+    </template>
+
+    <div>
+      <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div v-if="$page.props.jetstream['canUpdateProfileInformation']">
+          <UpdateProfileInformationForm :user="$page.props.auth['user']" />
+
+          <SectionBorder />
+        </div>
+
+        <div>
+          <AddressInfos />
+
+          <SectionBorder />
+        </div>
+
+        <div v-if="$page.props.jetstream['canUpdatePassword']">
+          <UpdatePasswordForm class="mt-10 sm:mt-0" />
+
+          <SectionBorder />
+        </div>
+
+        <div v-if="$page.props.jetstream['canManageTwoFactorAuthentication']">
+          <TwoFactorAuthenticationForm
+            :requires-confirmation="confirmsTwoFactorAuthentication"
+            class="mt-10 sm:mt-0"
+          />
+
+          <SectionBorder />
+        </div>
+
+        <LogoutOtherBrowserSessionsForm
+          :sessions="sessions"
+          class="mt-10 sm:mt-0"
+        />
+
+        <template v-if="$page.props.jetstream['hasAccountDeletionFeatures']">
+          <SectionBorder />
+
+          <DeleteUserForm class="mt-10 sm:mt-0" />
+        </template>
+      </div>
+    </div>
+  </PanelLayout>
+</template>

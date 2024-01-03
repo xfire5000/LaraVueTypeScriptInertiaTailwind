@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+  display: none;
+}
+
+body {
+  @apply bg-white dark:bg-dark-300;
+}
+
+body * {
+  @apply transition-colors duration-200;
+}
+
+* {
+  word-spacing: 0 !important;
+  letter-spacing: 0 !important;
+  scrollbar-color: #3ea1ec transparent;
+  scrollbar-width: thin;
+  font-family: 'IRANSansWeb(FaNum) Normal', Tahoma;
+  font-style: normal;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'IRANSansWeb(FaNum) Medium', Tahoma;
+}
+
+::-webkit-scrollbar {
+  @apply w-[12px];
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #3ea1ec;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px #3ea1ec;
+}
+
+.border {
+  border-color: transparent !important;
+}
+
+.dir-ltr {
+  direction: ltr !important;
+}
+
+.dir-rtl {
+  direction: rtl !important;
+}
+
+.ql-toolbar {
+  @apply rounded-t-lg dark:bg-dark-200;
+}
+
+.ql-toolbar button {
+  @apply rounded-md hover:bg-dark-200;
+}
+
+.ql-picker-label {
+  @apply text-secondary;
+}
+
+.ql-picker-label svg {
+  @apply left-0 right-auto;
+}
+
+.ql-snow .ql-stroke,
+.ql-snow .ql-fill {
+  @apply stroke-secondary;
+}
+
+.ql-editor.ql-blank::before {
+  @apply rtl:left-auto dark:text-white;
+}
+
+.editor-parent {
+  @apply [&_.ql-container]:max-h-30 [&_.ql-container]:overflow-y-auto [&_.ql-container]:rounded-b-lg [&_.ql-picker-options>span]:hover:rounded-lg [&_.ql-picker-options]:rounded-lg [&_.ql-picker-options]:dark:bg-dark-300 [&_.ql-picker-options]:dark:text-gray-400 [&_.ql-selected]:dark:bg-dark-200 [&_.ql-selected]:dark:text-secondary;
+}
+
+.date-picker {
+  @apply dark:[&_.vpd-addon-list]:bg-dark-200 dark:[&_.vpd-body]:bg-dark-200 dark:[&_.vpd-body]:text-white dark:[&_.vpd-column-header]:text-white [&_.vpd-input-group]:hidden;
+  @apply dark:[&_.vpd-content]:bg-dark-200;
+}
+
+input::-webkit-inner-spin-button,
+input::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  @apply m-0;
+}
+
+input {
+  -moz-appearance: textfield !important;
+}
