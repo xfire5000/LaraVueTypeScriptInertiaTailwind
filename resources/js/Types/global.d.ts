@@ -35,4 +35,17 @@ declare global {
     link?: string
     icon?: string
   }
+
+  declare type IMediaItem = {
+    id: number
+    title: string
+    path: string
+    type: string
+    size: string
+    collection: string
+    user: IUserItem
+    user_id: number
+    created_at: Date
+    updated_at: Date
+  }
 }

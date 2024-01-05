@@ -73,5 +73,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'lscache' => \Litespeed\LSCache\LSCacheMiddleware::class,
         'lstags' => \Litespeed\LSCache\LSTagsMiddleware::class,
+        'optimizeImages' => \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
     ];
 }

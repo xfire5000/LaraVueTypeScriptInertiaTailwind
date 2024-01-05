@@ -7,6 +7,8 @@ import vuetify from './Plugins/vuetify'
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3'
 import VueTransitions from '@morev/vue-transitions'
 import '@morev/vue-transitions/styles'
+import VuePlyr from '@skjnldsv/vue-plyr'
+import '@skjnldsv/vue-plyr/dist/vue-plyr.css'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers'
@@ -67,6 +69,7 @@ createInertiaApp({
         },
       })
       .component('Editor', QuillEditor)
+      .use(VuePlyr)
     return app.mount(el)
   },
   progress: {

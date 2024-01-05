@@ -32,9 +32,9 @@ return [
     ],
 
     'google_recaptcha' => [
-      'url' => 'https://www.google.com/recaptcha/api/siteverify',
-      'site_key' => env('VITE_GOOGLE_RECAPTCHA_SITE_KEY'),
-      'secret_key' => env('VITE_GOOGLE_RECAPTCHA_SECRET_SITE_KEY'),
-  ],
+        'url' => 'https://www.google.com/recaptcha/api/siteverify',
+        'site_key' => env('VITE_GOOGLE_RECAPTCHA_SITE_KEY'),
+        'secret_key' => env('VITE_GOOGLE_RECAPTCHA_SECRET_SITE_KEY'),
+    ],
 
 ];
