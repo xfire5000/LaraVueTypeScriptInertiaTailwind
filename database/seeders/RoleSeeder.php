@@ -25,6 +25,7 @@ class RoleSeeder extends Seeder
         $permissions = [
             'view-users', 'edit-users', 'add-users', 'delete-users',
             'view-roles', 'edit-roles', 'add-roles', 'delete-roles',
+            'view-medias', 'edit-medias', 'add-medias', 'delete-medias',
         ];
 
         $role = Role::findOrCreate('admin', 'web');

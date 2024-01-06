@@ -25,6 +25,7 @@ v-text-field(
   @keypress.enter="emit('doSearch')",
   class="dark:bg-dark-200",
   hide-details="auto",
+  rounded="full",
   variant="outlined"
 )
 </template>

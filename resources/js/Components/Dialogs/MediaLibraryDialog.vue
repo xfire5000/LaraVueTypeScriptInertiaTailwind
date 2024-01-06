@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import ConfirmationDialog from './ConfirmationModal.vue'
-  import DialogModal from './DialogModal.vue'
-  import FileAssetIcon from './FileAssetIcon.vue'
-  import PreviewDialog from './PreviewDialog.vue'
+  import ConfirmationDialog from '../ConfirmationModal.vue'
+  import DialogModal from '../DialogModal.vue'
+  import FileAssetIcon from '../FileAssetIcon.vue'
+  import PreviewDialog from '../PreviewDialog.vue'
   import { usePage } from '@inertiajs/vue3'
   import {
     mdiArrowDown,
@@ -52,6 +52,10 @@
     destination: 'media-library',
     collection: '',
   })
+
+  const ModelValue = computed(() =>
+    props.multiple ? (props.modelValue as IMediaItem[]) : [],
+  )
 
   const emit = defineEmits(['close', 'update:modelValue'])
 
@@ -173,12 +177,11 @@
       if (
         newValue &&
         newValue.data.length &&
-        newValue.total >= mediaModule.page
+        !mediaModule.fetchLock &&
+        _.differenceBy(newValue.data, mediaModule.mediaItems, 'id').length
       ) {
-        mediaModule.mediaItems = [
-          ...mediaModule.mediaItems,
-          ...(newValue.data as IMediaItem[]),
-        ]
+        mediaModule.mediaItems.push(...(newValue.data as IMediaItem[]))
+        _.uniqBy(mediaModule.mediaItems, 'id')
         mediaModule.page++
       } else mediaModule.fetchLock = true
     },
@@ -193,9 +196,15 @@
     execute()
   }
 
-  useInfiniteScroll(el, () => {
-    if (!isFetching.value && !mediaModule.fetchLock) fetchMedia()
-  })
+  useInfiniteScroll(
+    el,
+    () => {
+      if (!isFetching.value && !mediaModule.fetchLock) fetchMedia()
+    },
+    {
+      interval: 4000,
+    },
+  )
 
   const deleteFile = reactive<{ dialog: boolean; fileId: number }>({
     dialog: false,
@@ -212,7 +221,7 @@
       .delete<{ msg: string }>(
         route(
           'media-library.delete',
-          props.multiple
+          props.multiple && (props.modelValue as IMediaItem[]).length
             ? (props.modelValue as IMediaItem[])
                 .map((item) => item.id)
                 .toString()
@@ -226,6 +235,8 @@
             mediaModule.mediaItems,
             (item) => item.id === deleteFile.fileId,
           )
+          if (props.multiple && (props.modelValue as IMediaItem[]).length)
+            value.value = []
           deleteFile.fileId = 0
           toast(data.value?.msg || '', { type: 'success' })
         }
@@ -316,14 +327,16 @@ DialogModal(:closeable="false", :show, @close="emit('close')")
       | {{ $t('media-library.index') }}
       div(class="ltr:text-right rtl:text-left", v-if="multiple").grow
         v-btn(
+          :disabled="!ModelValue?.length",
           :prepend-icon="mdiTrashCanOutline",
+          @click="deleteFile.dialog = true",
           color="red",
           rounded="full",
           size="small",
           variant="tonal"
-        ).my-auto {{ $t('delete') }}
+        ).my-auto {{ $t('delete', { name: ModelValue?.length }) }}
   template(#content)
-    .flex.flex-col
+    .flex.flex-col.pb-4
       TransitionSlide
         Dropzone(
           :options="dropzone",

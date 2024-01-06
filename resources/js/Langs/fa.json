@@ -4,7 +4,9 @@
   "all": "همه",
   "auth": {
     "email": "ایمیل",
-    "password": "گذرواژه"
+    "password": "گذرواژه",
+    "password_conf": "تکرار گذرواژه",
+    "change-password": "تغییر گذرواژه"
   },
   "back": "بازگشت",
   "cancel": "لغو",
@@ -14,6 +16,7 @@
     "title": "تأیید گذرواژه",
     "desc": "برای امنیت خود ، لطفاً گذرواژه خود را تأیید کنید."
   },
+  "created_at": "تاریخ ایجاد",
   "dashboard": "داشبورد",
   "date": "تاریخ",
   "delete": "حذف {name}",
@@ -122,7 +125,17 @@
   "update-password": "گذرواژه را به روز کنید",
   "updated_at": "تغییر",
   "user": "کاربر",
+  "user-infos": {
+    "name": "نام",
+    "email": "ایمیل",
+    "password": "گذرواژه",
+    "roles": "نقش ها"
+  },
   "users": "کاربران",
+  "validation-rules": {
+    "required": "الزامی",
+    "email-invalid": "ایمیل نا معتبر است"
+  },
   "verifications": {
     "email-unverified": "آدرس ایمیل شما تأیید نشده است.",
     "resend-verification": "برای ارسال مجدد ایمیل تأیید اینجا را کلیک کنید.",

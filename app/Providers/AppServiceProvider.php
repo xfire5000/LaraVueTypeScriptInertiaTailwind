@@ -5,6 +5,8 @@ namespace App\Providers;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Telescope\TelescopeServiceProvider;
@@ -44,6 +46,13 @@ class AppServiceProvider extends ServiceProvider
             });
 
             return $this;
+        });
+        Storage::buildTemporaryUrlsUsing(function ($path, $expiration, $options) {
+            return URL::temporarySignedRoute(
+                'local.temp',
+                $expiration,
+                array_merge($options, ['path' => $path])
+            );
         });
     }
 }

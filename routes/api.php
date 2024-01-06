@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\MediaLibraryController;
+use App\Http\Controllers\UserController;
+use Illuminate\Foundation\Http\Middleware\HandlePrecognitiveRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,10 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware(['auth:sanctum',HandlePrecognitiveRequests::class])->group(function() {
+  // user
+  Route::get('/user', function (Request $request) {
     return $request->user();
+  });
+  // media-libraries
+  Route::resource('media-library', MediaLibraryController::class)->middleware(['view-medias','add-medias','edit-medias','delete-medias'])
+    ->only(['index','store','update','destroy']);
+  // users
+  Route::resource('users',UserController::class)->middleware(['add-users','edit-users','delete-users'])
+    ->only(['store','update','destroy']);
 });
-
-Route::resource('media-library', MediaLibraryController::class)->middleware('auth:sanctum')
-  ->only(['index','store','destroy']);
-Route::get('media-library/download/{id}',[MediaLibraryController::class, 'download'])->name('media-library.download');

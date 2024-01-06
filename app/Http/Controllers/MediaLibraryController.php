@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\MediaLibrary;
 use DragonCode\Support\Facades\Filesystem\File;
-use DragonCode\Support\Facades\Http\Url;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Pion\Laravel\ChunkUpload\Exceptions\UploadMissingFileException;
 use Pion\Laravel\ChunkUpload\Handler\HandlerFactory;
 use Pion\Laravel\ChunkUpload\Receiver\FileReceiver;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
-use Illuminate\Support\Str;
 
 class MediaLibraryController extends Controller
 {
@@ -21,24 +21,25 @@ class MediaLibraryController extends Controller
      */
     public function index()
     {
-        if(!isset($_GET['s'])) {
+        if (! isset($_GET['s'])) {
             $media = MediaLibrary::with('user');
-            if(isset($_GET['c'])) {
-                $media->ofCollection(explode(',',$_GET['c']));
+            if (isset($_GET['c'])) {
+                $media->ofCollection(explode(',', $_GET['c']));
             }
-            if(isset($_GET['t'])) {
-                $media->ofType(explode(',',$_GET['t']));
+            if (isset($_GET['t'])) {
+                $media->ofType(explode(',', $_GET['t']));
             }
         } else {
-          $media = MediaLibrary::search($_GET['s'])->query(fn($query)=>$query->with('user'));
-          if(isset($_GET['c'])) {
-            $media->query(fn($query)=>$query->ofCollection(explode(',',$_GET['c'])));
-          }
-          if(isset($_GET['t'])) {
-            $media->query(fn($query)=>$query->ofType(explode(',',$_GET['t'])));
-          }
+            $media = MediaLibrary::search($_GET['s'])->query(fn ($query) => $query->with('user'));
+            if (isset($_GET['c'])) {
+                $media->query(fn ($query) => $query->ofCollection(explode(',', $_GET['c'])));
+            }
+            if (isset($_GET['t'])) {
+                $media->query(fn ($query) => $query->ofType(explode(',', $_GET['t'])));
+            }
         }
         $media = (isset($_GET['d']) and $_GET['d'] == 'asc') ? $media->oldest()->paginate(12) : $media->latest()->paginate(12);
+
         return response($media);
     }
 
@@ -55,19 +56,19 @@ class MediaLibraryController extends Controller
      */
     public function store(Request $request)
     {
-      $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
-      if ($receiver->isUploaded() === false) {
-          throw new UploadMissingFileException();
-      }
-      $save = $receiver->receive();
-      if ($save->isFinished()) {
-          return $this->saveFile($save->getFile(), $request);
-      }
-      $handler = $save->handler();
+        $receiver = new FileReceiver('file', $request, HandlerFactory::classFromRequest($request));
+        if ($receiver->isUploaded() === false) {
+            throw new UploadMissingFileException;
+        }
+        $save = $receiver->receive();
+        if ($save->isFinished()) {
+            return $this->saveFile($save->getFile(), $request);
+        }
+        $handler = $save->handler();
 
-      return response()->json([
-          'done' => $handler->getPercentageDone(),
-      ]);
+        return response()->json([
+            'done' => $handler->getPercentageDone(),
+        ]);
     }
 
     /**
@@ -99,16 +100,17 @@ class MediaLibraryController extends Controller
      */
     public function destroy(mixed $mediaLibrary)
     {
-          $items = MediaLibrary::whereIn('id', explode(',', $mediaLibrary));
-          $medias = $items->get();
-          foreach ($medias as $item) {
+        $items = MediaLibrary::whereIn('id', explode(',', $mediaLibrary));
+        $medias = $items->get();
+        foreach ($medias as $item) {
             $pathFile = public_path("store/$item->src");
             if (File::exists($pathFile)) {
                 File::delete($pathFile);
             }
-          }
-          $items->delete();
-          return response(['msg'=>__('actions.delete').' '.__('actions.done')], Response::HTTP_OK);
+        }
+        $items->delete();
+
+        return response(['msg' => __('actions.delete').' '.__('actions.done')], Response::HTTP_OK);
     }
 
     protected function saveFile(UploadedFile $file, Request $request)
@@ -126,21 +128,29 @@ class MediaLibraryController extends Controller
             'size' => $file->getSize(),
             'title' => time().'_'.explode('.', $file->getClientOriginalName())[0],
             'user_id' => auth()->id(),
-            'collection' => $request->input('collection')
+            'collection' => $request->input('collection'),
         ];
         $fileItem[] = MediaLibrary::create($data)->toArray();
         $file->move(public_path("upload/$filePath"), $fileName);
-        if(Str::contains($data['type'], 'image')){
-          ImageOptimizer::optimize(public_path("upload/$filePath/$fileName"));
+        if (Str::contains($data['type'], 'image')) {
+            ImageOptimizer::optimize(public_path("upload/$filePath/$fileName"));
         }
 
         return response($fileItem, Response::HTTP_OK);
     }
 
-    public function download(mixed $id)
+    public function generate_url(mixed $id)
     {
-      return Url::temporarySignedRoute(
-        'unsubscribe', now()->addMinutes(30), ['user' => auth()->id()]
-      );
+        $path = MediaLibrary::findOrFail($id)->path;
+
+        return redirect(Storage::temporaryUrl(Str::replace('/', '*', "upload/$path"), now()->addHours(2)));
+    }
+
+    public function download(string $path)
+    {
+        $generatedUrlWithoutSignatureParam = url()->current().'?expires='.$_GET['expires'];
+        $hash = hash_hmac('sha256', $generatedUrlWithoutSignatureParam, config('app.key'));
+
+        return hash_equals($_GET['signature'], $hash) ? Storage::download(Str::replace('*', '/', $path)) : abort(Response::HTTP_NOT_FOUND);
     }
 }

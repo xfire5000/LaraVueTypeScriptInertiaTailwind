@@ -1,7 +1,13 @@
 import ApplicationLogo from '@Components/ApplicationLogo.vue'
 import ThemeProviderVue from '@Components/ThemeProvider.vue'
 import { Link, usePage } from '@inertiajs/vue3'
-import { mdiArrowLeft, mdiChevronLeft, mdiHomeOutline, mdiMenu } from '@mdi/js'
+import {
+  mdiAccountGroupOutline,
+  mdiArrowLeft,
+  mdiChevronLeft,
+  mdiHomeOutline,
+  mdiMenu,
+} from '@mdi/js'
 import { TransitionSlide } from '@morev/vue-transitions'
 import { useI18n } from 'vue-i18n'
 import { VBtn, VDivider, VIcon } from 'vuetify/lib/components/index.mjs'
@@ -98,6 +104,12 @@ export const NavDrawer = defineComponent({
         link: route('dashboard'),
         icon: mdiHomeOutline,
         can: true,
+      },
+      {
+        title: t('users'),
+        link: route('users.index'),
+        icon: mdiAccountGroupOutline,
+        can: permissions['view-users'],
       },
     ]
 
