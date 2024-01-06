@@ -1,4 +1,5 @@
 {
+  "exclude": ["resources", "vendor", "public"],
   "preset": "laravel",
   "rules": {
     "simplified_null_return": true,
@@ -7,6 +8,5 @@
       "anonymous_class": false,
       "named_class": false
     }
-  },
-  "exclude": ["resources", "routes", "vendor", "public"]
+  }
 }
